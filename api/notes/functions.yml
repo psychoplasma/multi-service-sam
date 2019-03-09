@@ -1,0 +1,35 @@
+getNote:
+  handler: functions/notes.get
+  layers:
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerLibs}}
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerNodejs}}
+  events:
+  - http:
+      path: notes/{id}
+      method: get
+      cors: true
+      authorizer: aws_iam
+
+createNote:
+  handler: functions/notes.create
+  layers:
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerLibs}}
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerNodejs}}
+  events:
+  - http:
+      path: notes
+      method: post
+      cors: true
+      authorizer: aws_iam
+
+deleteNote:
+  handler: functions/notes.delete
+  layers:
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerLibs}}
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerNodejs}}
+  events:
+  - http:
+      path: notes/{id}
+      method: delete
+      cors: true
+      authorizer: aws_iam

@@ -1,0 +1,23 @@
+service: layers
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: ap-northeast-2
+
+layers:
+  commonLibraries:
+    name: ${self:provider.stage}-commonLibraries
+    path: ../../libs
+
+resources:
+  Outputs:
+    CommonLibraries:
+      Value:
+        Ref: CommonLibrariesLambdaLayer
+      Export:
+        Name: CommonLibrariesLambdaLayer

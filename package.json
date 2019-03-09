@@ -1,0 +1,45 @@
+{
+  "name": "multi-service-sam",
+  "version": "1.0.0",
+  "description": "Multi-service SAM project",
+  "scripts": {
+    "deploy": "npm run deploy-resources && npm run deploy-api",
+    "deploy-resources": "npm run deploy-storage && npm run deploy-database && npm run deploy-api-gateway && npm run deploy-cognito",
+    "deploy-storage": "cd resources/storage-s3 && sls deploy -v --stage $STAGE && cd ../..",
+    "deploy-database": "cd resources/dynamodb && sls deploy -v --stage $STAGE && cd ../..",
+    "deploy-cognito": "cd resources/cognito && sls deploy -v --stage $STAGE && cd ../..",
+    "deploy-api-gateway": "cd resources/api-gateway && sls deploy -v --stage $STAGE && cd ../..",
+    "deploy-api": "npm run deploy-api-users && npm run deploy-api-notes",
+    "deploy-api-users": "cd api/users && sls deploy -v --stage $STAGE && cd ../..",
+    "deploy-api-notes": "cd api/notes && sls deploy -v --stage $STAGE && cd ../..",
+    "remove": "npm run remove-api && npm run remove-resources",
+    "remove-resources": "npm run remove-cognito && npm run remove-api-gateway && npm run remove-database && npm run remove-storage",
+    "remove-storage": "cd resources/storage-s3 && sls remove -v --stage $STAGE && cd ../..",
+    "remove-database": "cd resources/dynamodb && sls remove -v --stage $STAGE && cd ../..",
+    "remove-cognito": "cd resources/cognito && sls remove -v --stage $STAGE && cd ../..",
+    "remove-api-gateway": "cd resources/api-gateway && sls remove -v --stage $STAGE && cd ../..",
+    "remove-api": "npm run remove-api-notes && npm run remove-api-users",
+    "remove-api-users": "cd api/users && sls remove -v --stage $STAGE && cd ../..",
+    "remove-api-notes": "cd api/notes && sls remove -v --stage $STAGE && cd ../..",
+    "test-users": "export FUNC_DIR=api/users && export DYNAMODB_DIR=resources/dynamodb && rm -rf test/functions && cp -r api/users/functions/ test/functions && node scripts/yaml-merger.js && cd test && sls dynamodb install && sls offline start",
+    "test-notes": "export FUNC_DIR=api/notes && export DYNAMODB_DIR=resources/dynamodb && rm -rf test/functions && cp -r api/campaigns/functions/ test/functions && node scripts/yaml-merger.js && cd test && sls dynamodb install && sls offline start"
+  },
+  "author": "Mustafa Morca",
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "get-value": "^3.0.1",
+    "jest": "^23.6.0",
+    "js-yaml": "^3.12.2",
+    "object-scan": "^5.0.1",
+    "serverless-dynamodb-client": "0.0.2",
+    "serverless-dynamodb-local": "0.2.35",
+    "serverless-offline": "^4.7.0",
+    "serverless-mysql": "^1.2.1",
+    "set-value": "^3.0.0",
+    "unset-value": "^1.0.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.411.0",
+    "uuid": "^3.3.2"
+  }
+}

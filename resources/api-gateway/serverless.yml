@@ -1,0 +1,70 @@
+service: api-gateway
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  # Our stage is based on what is passed in when running serverless
+  # commands. Or fallsback to what we have set in the provider section.
+  stage: ${opt:stage, self:provider.stage}
+
+  domains:
+    main: main-domain-name.com
+    prod: sub-domain.main-domain-name.com
+    staging: staging-sub-domain.main-domain-name.com
+    dev: dev-sub-domain.main-domain-name.com
+
+  customDomain:
+    domainName: ${self:custom.domains.${self:custom.stage}, self:custom.domains.dev}
+    certificateName: "*.${self:custom.domains.main}"
+    stage: ${self:custom.stage}
+    endpointType: "edge"
+    createRoute53Record: true
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: ap-northeast-2
+
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties: 
+        Name: ${self:custom.stage}-api-gateway
+
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+    GatewayResponseDefault5XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_5XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+  Outputs:
+    ApiGatewayRestApiId:
+      Value:
+        Ref: ApiGatewayRestApi
+      Export:
+        Name: ${self:custom.stage}ApiGatewayRestApiId
+  
+    ApiGatewayRestApiRootResourceId:
+      Value:
+         Fn::GetAtt:
+          - ApiGatewayRestApi
+          - RootResourceId 
+      Export:
+        Name: ${self:custom.stage}ApiGatewayRestApiRootResourceId

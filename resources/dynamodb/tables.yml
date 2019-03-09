@@ -1,0 +1,41 @@
+Resources:
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.tableName.userTable}
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: ${self:custom.billingMode}
+
+  NoteTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.tableName.noteTable}
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: ${self:custom.billingMode}
+
+Outputs:
+  UserTableArn:
+    Value:
+      Fn::GetAtt:
+        - UserTable
+        - Arn
+    Export:
+      Name: ${self:custom.stage}-UserTableArn
+
+  NoteTableArn:
+    Value:
+      Fn::GetAtt:
+        - NoteTable
+        - Arn
+    Export:
+      Name: ${self:custom.stage}-NoteTableArn

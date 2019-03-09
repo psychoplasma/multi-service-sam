@@ -1,0 +1,40 @@
+service: local-test
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline
+
+custom:
+  # Our stage is based on what is passed in when running serverless
+  # commands. Or fallsback to what we have set in the provider section.
+  stage: ${opt:stage, self:provider.stage}
+
+  billingMode: PAY_PER_REQUEST
+
+  dynamodb:
+    # If you only want to use DynamoDB Local in some stages, declare them here
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    # Uncomment only if you already have a DynamoDB running locally
+    # noStart: true
+    seed:
+      domain:
+        sources:
+          - table: ${self:custom.tableName.userTable}
+            sources: [mock/mock-user-table.json]
+          - table: ${self:custom.tableName.noteTable}
+            sources: [mock/mock-note-table.json]
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: ap-northeast-2

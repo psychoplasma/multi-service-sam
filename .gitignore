@@ -1,0 +1,19 @@
+# Package directories
+/node_modules
+test/.dynamodb
+test/functions
+test/serverless.yml
+
+.idea/
+
+# Serverless directories
+.serverless
+.webpack
+
+# env and secrets
+env.yml
+.env
+credentials.json
+
+# MacOS files
+.DS_Store

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "content": "My first note which is super awsome",
+    "createdAt": "29/12/12"
+  },
+  {
+    "id": "2",
+    "content": "My second note not that much awsome",
+    "createdAt": "02/12/12"
+  },
+  {
+    "id": "3",
+    "content": "Some notes and notes",
+    "createdAt": "11/12/12"
+  },
+  {
+    "id": "4",
+    "content": "And it goes..",
+    "createdAt": "13/12/12"
+  }
+]

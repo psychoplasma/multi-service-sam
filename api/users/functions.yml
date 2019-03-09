@@ -1,0 +1,35 @@
+getUser:
+  handler: functions/users.get
+  layers:
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerLibs}}
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerNodejs}}
+  events:
+  - http:
+      path: users/{id}
+      method: get
+      cors: true
+      authorizer: aws_iam
+
+createUser:
+  handler: functions/users.create
+  layers:
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerLibs}}
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerNodejs}}
+  events:
+  - http:
+      path: users
+      method: post
+      cors: true
+      authorizer: aws_iam
+
+deleteUser:
+  handler: functions/users.delete
+  layers:
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerLibs}}
+    - ${cf:${self:custom.layerStack}-${self:custom.stage}.${self:custom.layerNodejs}}
+  events:
+  - http:
+      path: users/{id}
+      method: delete
+      cors: true
+      authorizer: aws_iam
